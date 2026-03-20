@@ -1,9 +1,11 @@
-# DEVELOPMENT.md — Development & Product Team
+# DEVELOPMENT.md — Autonomous Dev & PM Agents
 
-## Team Structure
+## Agent Structure
 
-- **Developer**: Builds features, writes code, opens PRs
-- **Project Manager**: Reviews data, proposes solutions, negotiates direction with Rich
+- **Developer Agent** (Autonomous Subagent): Builds features, writes code, opens PRs
+- **Project Manager Agent** (Autonomous Subagent): Reviews data, proposes solutions, creates Jira tickets
+
+Both agents run continuously. Rich has approval gates at key decision points.
 
 ---
 
@@ -34,40 +36,17 @@ feature/AIC-<ticket-number>-<descriptive-name>
 
 ---
 
-## PR Workflow
+## Developer Agent Workflow
 
-### Step 1: Create Jira Ticket
+### Step 1: Watch Jira for New Tickets
 
-Developer or PM creates a Jira ticket in the AIC project:
-- **Type**: Story (for features) or Bug (for issues)
-- **Title**: Clear description (e.g., "Landing page redesign for better conversion")
-- **Description**: What needs to be done, why, and expected outcome
-- **Assignee**: Developer
-- **Label**: `development` or `ops` (for operations team tasks)
+Developer Agent watches the AIC Jira project for new tickets assigned to it.
 
-**Example ticket (AIC-1)**:
-```
-Title: Landing Page Redesign - Improve Quiz Conversion
-Type: Story
-Status: To Do
-Description:
-- Current quiz completion rate: 60%
-- Target: 70% (with redesign)
-- Work includes:
-  * Simplify value prop above fold
-  * Add progress bar to reduce abandonment
-  * Redesign results screen with clear CTA
-  * Add testimonials/social proof
-- Acceptance criteria:
-  * Quiz completion rate test shows 70%+ in staging
-  * Mobile-responsive design
-  * Load time < 2 seconds
-- Estimate: 40 hours
-```
+**Trigger**: PM creates ticket (AIC-#) and marks "Ready to Build"
 
-### Step 2: Create Feature Branch
+### Step 2: Check Out Feature Branch
 
-Developer checks out a feature branch:
+Developer creates feature branch:
 
 ```bash
 git checkout -b feature/AIC-1-landing-page-redesign
@@ -79,7 +58,7 @@ Developer builds the feature with:
 - **Clean code**: Well-organized, documented
 - **Unit tests**: For critical logic
 - **Documentation**: README or inline comments explaining changes
-- **Commits**: Descriptive commit messages
+- **Commits**: Descriptive, reference Jira ticket
 
 Example commits:
 ```
@@ -119,226 +98,242 @@ Testing:
 Closes: AIC-1
 ```
 
-### Step 5: Rich Reviews & Approves
+### Step 5: Wait for Rich's Approval
 
-Rich reviews the PR:
-- Checks code quality
-- Reviews design changes
-- Verifies functionality in staging
-- Approves or requests changes
+Rich reviews the PR (code quality, design, functionality) and replies:
 
-Rich can reply with:
 ```
-Looks great. Small tweak: Can you adjust the CTA button color to match our brand blue (#2563EB)? Otherwise, approved to merge.
+Looks great. Small tweak: Can you adjust the CTA button color 
+to match our brand blue (#2563EB)? Otherwise, approved to merge.
 ```
+
+Developer makes adjustments if needed, then merges.
 
 ### Step 6: Merge to Main
 
-Once approved, developer merges to main:
+Once Rich approves:
 
 ```bash
 git merge feature/AIC-1-landing-page-redesign --ff-only
 git push origin main
 ```
 
-**Note**: Only `main` branch is pushed to production. Features sit in main until marked "ready to deploy" in AVAILABLE-FEATURES.md.
-
-### Step 7: Mark Ready (If Deployment Needed)
-
-If the feature should go live, update AVAILABLE-FEATURES.md:
-
-```markdown
-## Ready to Deploy (Will go live on next heartbeat)
-- [x] AIC-1: Landing Page Redesign (merged, awaiting approval to deploy)
-```
-
-### Step 8: Heartbeat Deploys
-
-Heartbeat checks AVAILABLE-FEATURES.md daily:
-- Sees AIC-1 is marked "ready"
-- Pulls latest `main` branch
-- Deploys feature to production
-- Updates AVAILABLE-FEATURES.md to "Recently Deployed"
+**Note**: Feature sits in `main` (live code) but not deployed until Rich marks "ready" in AVAILABLE-FEATURES.md.
 
 ---
 
-## Project Manager Role
+## Project Manager Agent
 
-PM is not just project management — **PM is also creative strategy advisor**.
+PM Agent is autonomous and runs continuously, monitoring data and proposing improvements.
 
-### PM Responsibilities
+### PM Agent Schedule
 
-1. **Review daily/weekly agent reports** (from Reporting Agent)
-   - What's working? (networking, content, conversions)
-   - What's not? (low engagement, stalled leads)
+- **Continuous**: Monitor Reporting Agent emails (new ones arrive @ 5 PM daily)
+- **Daily analysis**: Review metrics, trends, opportunities
+- **Weekly proposals**: Identify top improvement opportunity, create Jira ticket + email to Rich
+- **On-demand**: Adjust backlog based on Rich's feedback
 
-2. **Analyze data** deeply
-   - Traffic patterns
-   - Conversion rates
-   - Lead quality
-   - Engagement metrics
+### PM Agent Workflow
 
-3. **Propose solutions** based on data
-   - What feature/change would improve results?
-   - Why would it help?
-   - What's the estimated impact?
+#### Step 1: Monitor Daily Data
 
-4. **Estimate impact** in terms Rich cares about
-   - Revenue impact (more leads, higher conversion)
-   - Cost savings (automation efficiency)
-   - Time saved (dev hours to build it)
+PM watches for new Reporting Agent emails (every day @ 5 PM).
 
-5. **Create Jira tickets** for proposed features
-   - PM writes the ticket with full context
-   - Creates acceptance criteria
-   - Provides data backing the proposal
+**Data reviewed**:
+- Content engagement (posts, reactions, comments)
+- Network growth (connections, DM responses, warm leads)
+- Audit booking rate
+- Sales conversion metrics
+- Research insights
 
-6. **Email proposals to Rich** with data + impact estimate
-   - Subject: "Proposal: [Feature Name] (AIC-#)"
-   - Rich approves via email reply
-   - Once approved, Dev starts on Jira ticket
+**Analysis**:
+- What's working? (high engagement, conversions increasing)
+- What's not? (low completion rate, stalled leads)
+- What's the trend? (improving or declining?)
 
-7. **Negotiate direction** with Rich
-   - Rich might say "no, prioritize [other thing]"
-   - PM adjusts backlog and communicates with Dev
+#### Step 2: Identify Improvement Opportunities
 
----
+PM answers: "What feature/change would improve results?"
 
-## PM Proposal Workflow (Detailed Example)
+**Examples**:
+- "Quiz completion rate dropping → Landing page redesign could improve UX"
+- "No demo conversions → Email nurture sequence could warm up cold leads"
+- "Low content engagement → Adjust posting times / themes"
+- "Quiz abandonment high → Add progress bar (psychology)"
 
-### Scenario: Quiz Completion Rate Dropping
+#### Step 3: Estimate Impact
 
-**Data from Reporting Agent** (Week 2 report):
+PM calculates:
+- **Revenue impact**: How many more leads/demos/sales?
+- **Cost impact**: How many dev hours needed?
+- **Timeline**: How long to build?
+- **ROI**: Is it worth doing?
+
+**Example calculation**:
 ```
-Quiz Starts: 30
-Quiz Completions: 18 (60%)
-High-fit Leads: 8
-Demos Booked: 0
-
-Insight: Quiz starts are good, but completions are low. 
-12 leads lost (40% abandonment) = potential $60k/year lost revenue
+Current: 30 quiz starts, 18 completions (60%)
+Proposed: Landing page redesign
+Impact: 30 quiz starts, 21 completions (70%) = 3 more leads/week
+Value: 3 leads × $5k/month = $15k annual value
+Cost: 40 hours dev time
+Timeline: 2-3 weeks
+ROI: $15k value vs. $6k cost = 2.5x in month 1
 ```
 
-### PM Analysis
-- Root cause: Quiz results screen doesn't have clear next steps
-- Users see results but don't know what to do
-- They leave without booking a demo
+#### Step 4: Create Jira Ticket
 
-### PM Creates Jira Ticket (AIC-1)
+PM creates new Jira ticket in AIC project:
 
-**Title**: Landing Page Redesign - Improve Quiz Conversion
-**Type**: Story
-**Priority**: High (direct revenue impact)
-**Description**: See branching strategy section above
+**Ticket format**:
+```
+Title: Landing Page Redesign - Improve Quiz Conversion
+Type: Story
+Priority: High (direct revenue impact)
+Estimate: 40 hours
+Description:
 
-### PM Sends Email to Rich
+PROBLEM:
+Quiz completion rate is 60%, losing 12 leads/week.
+Users see results but don't know next steps.
+
+SOLUTION:
+Redesign landing page to:
+- Simplify value prop
+- Add progress bar
+- Redesign results screen with clear CTA
+- Add testimonials/social proof
+
+IMPACT:
+- Completion rate: 60% → 70%
+- Additional leads: 3/week
+- Revenue value: $15k/year
+- Cost: 40 hours dev time
+- ROI: 2.5x in month 1
+
+ACCEPTANCE CRITERIA:
+- Quiz completion rate ≥ 70% in staging tests
+- Mobile-responsive design
+- Load time < 2 seconds
+- "Guaranteed 7-month payback" messaging included
+
+BLOCKED BY: None
+DEPENDS ON: None
+```
+
+#### Step 5: Email Proposal to Rich
+
+PM sends email to Rich with detailed proposal:
 
 ```
 Subject: Proposal: Landing Page Redesign (AIC-1) — Improve Quiz Conversion
 
 Hi Rich,
 
-Data from this week shows a concerning trend:
-- Quiz starts: 30 ✅ (good)
-- Quiz completions: 18 (60%) ⚠️ (losing 40%)
-- High-fit leads: 8
-- Demos booked: 0 ❌ (should be 3-4)
+Data from this week shows a problem:
 
-The bottleneck: Quiz results don't have a clear "book a demo" CTA. 
-Users see their audit results but don't know the next step, so they leave.
+CURRENT STATE:
+- Quiz starts: 30 ✅
+- Quiz completions: 18 (60%) ⚠️ ← Losing 12 leads
+- Demos booked: 0 ❌
 
-PROPOSED SOLUTION: Landing Page Redesign (AIC-1)
-- Simplify quiz intro for clarity
-- Add progress bar (psychology: people feel invested)
+ROOT CAUSE:
+Users complete quiz but see results without clear "next steps."
+They don't know what to do, so they leave.
+
+PROPOSED SOLUTION:
+Landing Page Redesign (AIC-1)
+
+What we'd change:
+- Simplify quiz intro (clearer value prop above fold)
+- Add progress bar (psychology: invested users complete more)
 - Redesign results screen with prominent "Book Your Audit" CTA
-- Add testimonials above fold (social proof)
-- Mobile optimizations
+- Add testimonials/social proof section
+- Mobile-responsive improvements
 
 ESTIMATED IMPACT:
-- Quiz completion: 60% → 70% (retain 3 more leads/week)
-- Demo bookings: 0 → 3-4/week
-- Cost per demo: $1,500 (AIC-1 dev time, amortized)
-- Value per demo: ~$5k retainer = $15k annual value
-- ROI: 10x in first month
+- Quiz completion: 60% → 70% (3 more leads/week)
+- Annual value: $15k (3 leads × $5k/month)
+- Dev cost: 40 hours (~$6k in labor)
+- Timeline: 2-3 weeks
+- ROI: 2.5x in month 1 alone
 
-TIMELINE: Dev estimates 2-3 weeks (40 hours)
+JIRA TICKET:
+Created: AIC-1 (full acceptance criteria included)
 
 APPROVAL NEEDED:
-Is this the right priority for next 2 weeks?
-Any changes to the proposal?
+[ ] Yes, start immediately
+[ ] Yes, but with adjustments (see below)
+[ ] No, prioritize something else
+[ ] Not yet, wait until [date]
+
+If yes, I'll notify Dev Agent to start work.
 
 Thanks,
 PM
 ```
 
-### Rich Replies
+#### Step 6: Wait for Rich's Decision
 
+Rich replies to the email:
+
+**Option A: Approved**
 ```
-Subject: RE: Proposal: Landing Page Redesign (AIC-1) — Improve Quiz Conversion
+Approved. Start immediately.
 
-Approved. Love the data and approach.
+One addition: Make sure the results screen includes 
+"Guaranteed 7-month payback" messaging — that's our #1 differentiator.
 
-One addition: In the results screen, can we add "guaranteed 7-month payback" messaging? 
-That's our biggest differentiator vs. competitors.
-
-Create the Jira ticket and have Dev start when ready.
-
-Rich
-```
-
-### PM Updates Jira Ticket
-
-PM adds Rich's feedback to the AIC-1 ticket:
-```
-Acceptance Criteria:
-✓ Quiz completion rate 70%+ in staging
-✓ Mobile-responsive design
-✓ "Guaranteed 7-month payback" messaging on results screen
-✓ Load time < 2 seconds
+Let me know when Dev opens the PR.
 ```
 
-Changes ticket status to "In Progress" and assigns to Dev.
+PM replies to confirm, notifies Dev Agent to start work on AIC-1.
 
-### Dev Starts Work
+**Option B: With tweaks**
+```
+Approved, but I want to see two versions of the CTA button color
+(blue vs. green) and A/B test them. Otherwise, same scope.
 
-Dev checks out feature branch and begins work:
-```bash
-git checkout -b feature/AIC-1-landing-page-redesign
-# ... 2-3 weeks of development ...
-git push origin feature/AIC-1-landing-page-redesign
-# Opens PR to main
+Let me know when ready.
 ```
 
-### Rich Reviews + Approves PR
+PM updates AIC-1 ticket, notifies Dev Agent.
 
-PR is reviewed by Rich, approved, merged to main.
+**Option C: Postponed**
+```
+Good analysis, but I want to focus on sales first.
+Pause this until we have 3+ demos booked.
 
-### Feature Sits in Main (Not Live Yet)
-
-The redesigned landing page is now in `main` but not live.
-Staging version available at: `https://staging.example.com`
-
-### Rich Decides When to Deploy
-
-Once Rich sees the staging version working well, he marks it "ready to deploy":
-
-```markdown
-## AVAILABLE-FEATURES.md
-
-## Ready to Deploy (Will go live on next heartbeat)
-- [x] AIC-1: Landing Page Redesign (approved by Rich, ready for traffic)
+What's the next opportunity you see?
 ```
 
-### Heartbeat Deploys to Production
+PM notes this in Jira backlog, moves on to next opportunity.
 
-Next daily heartbeat:
-1. Checks AVAILABLE-FEATURES.md
-2. Sees AIC-1 is ready
-3. Pulls latest main branch code
-4. Deploys to production
-5. Confirms deployment via email to Rich
+#### Step 7: Continuous Monitoring
 
-Result: Live landing page redesign, driving 3-4 more demos/week.
+While Dev is building, PM:
+- Watches for new data/trends
+- Identifies next proposal opportunity
+- Prepares follow-up features
+- Tracks Dev progress (watches PR activity)
+
+---
+
+## Rich's Decision Points
+
+### 1. PM Proposal Review (Email)
+**When**: PM sends proposal email
+**Rich decides**: Approve, tweak, postpone, or reject
+**Timeline**: Same day reply
+
+### 2. PR Code Review (GitHub)
+**When**: Dev opens PR
+**Rich decides**: Approve merge, request changes, or reject
+**Timeline**: Within 24 hours
+
+### 3. Deployment Decision (AVAILABLE-FEATURES.md)
+**When**: Feature is merged and in staging
+**Rich decides**: Mark "ready to deploy" or hold
+**Timeline**: When tested in staging
 
 ---
 
@@ -356,21 +351,28 @@ AIC-3: [Feature/Bug Name]
 
 Increment by 1 for each new ticket.
 
-### Backlog Management
+### Backlog Status
 
-Tickets live in Jira, but summary available in DEVELOPMENT.md:
+Tickets in Jira show:
 
-**Active** (In progress):
-- AIC-1: Landing Page Redesign (Dev: 40 hrs)
-
-**Ready** (Waiting for Dev):
-- AIC-2: Automated Email Sequences (PM proposal approved)
+**To Do** (Awaiting approval from Rich):
+- AIC-2: Automated Email Sequences (PM proposal sent, waiting for approval)
 - AIC-3: Quiz Analytics Dashboard (In discussion with Rich)
 
-**Proposed** (Awaiting PM proposal):
-- Content Agent Improvements
-- SMS Notification System
-- Referral Tracking
+**Ready to Build** (Approved, waiting for Dev):
+- AIC-1: Landing Page Redesign (Approved by Rich, waiting for Dev to start)
+
+**In Progress** (Dev is building):
+- AIC-1: Landing Page Redesign (Dev on feature branch, PR in progress)
+
+**In Review** (PR open, waiting for Rich approval):
+- AIC-1: Landing Page Redesign (PR open at #1, awaiting Rich approval to merge)
+
+**Done** (Merged to main, in staging):
+- AIC-1: Landing Page Redesign (PR #1 merged, in staging, ready for deployment decision)
+
+**Deployed** (Live on production):
+- None yet
 
 ---
 
@@ -395,9 +397,9 @@ Tickets live in Jira, but summary available in DEVELOPMENT.md:
 
 ---
 
-## Deployment Checklist (Before Marking "Ready")
+## Deployment Checklist
 
-Before PM marks a feature "ready to deploy", confirm:
+Before marking a feature "ready to deploy" in AVAILABLE-FEATURES.md, confirm:
 
 - [ ] PR merged to main
 - [ ] Code tested in staging
@@ -406,30 +408,26 @@ Before PM marks a feature "ready to deploy", confirm:
 - [ ] Email templates reviewed (if applicable)
 - [ ] Database migrations ready (if applicable)
 - [ ] Rollback plan documented
-- [ ] Rich has reviewed and approved
+- [ ] Rich has reviewed staging and approved
 
 ---
 
 ## Communication Flow
 
 ```
-Daily Operations:
-Reporting Agent → Email to Rich (5 PM daily)
-                ↓
-Rich reviews, replies with steering
-                ↓
-Agents adjust for next day
+DAILY:
+Reporting Agent email (5 PM) → Rich reviews → Replies with steering (optional)
 
-Weekly Development:
-PM monitors data → PM creates Jira tickets → PM emails proposal to Rich
-                                                        ↓
-Rich approves (email) → Dev starts work (Jira ticket) → Dev opens PR
-                                                        ↓
-Rich reviews PR → Approves → Dev merges to main → Feature in staging
-                                                        ↓
-Rich marks "ready to deploy" in AVAILABLE-FEATURES.md
-                                                        ↓
-Heartbeat deploys to production → Confirmation email to Rich
+WEEKLY:
+PM monitors data → Identifies opportunity → Creates Jira ticket → Sends proposal email
+                                                                        ↓
+Rich approves (email) → PM notifies Dev Agent → Dev starts work (feature branch)
+                                                                        ↓
+Dev writes code → Opens PR → Rich reviews → Approves merge → Dev merges to main
+                                                                        ↓
+Feature in staging → Rich reviews staging → Marks "ready to deploy" in AVAILABLE-FEATURES.md
+                                                                        ↓
+Heartbeat deploys to production → Feature goes live
 ```
 
 ---
@@ -445,3 +443,5 @@ Heartbeat deploys to production → Confirmation email to Rich
 
 **Development structure created**: 2026-03-20
 **Jira Project**: AIC (https://loveamethystrose.atlassian.net/projects/AIC)
+**Dev Agent**: Autonomous subagent
+**PM Agent**: Autonomous subagent

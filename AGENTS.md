@@ -1,10 +1,27 @@
-# AGENTS.md — Autonomous Operations Agents
+# AGENTS.md — Autonomous Agents (8 Total)
 
 ## Overview
 
-Six autonomous agents run daily to execute the AIConsulting PLAN.md. Each agent operates independently, but all report to the **Reporting Agent** which sends Rich a daily email summary at 5 PM.
+**Eight autonomous subagents** run continuously to execute the AIConsulting PLAN.md:
 
-**Rich receives**: One email per day with operations metrics + ability to steer agents via email reply.
+**Operations Layer** (6 agents):
+1. Content Agent (daily)
+2. Networking Agent (daily)
+3. Audit Agent (daily)
+4. Research Agent (continuous)
+5. Sales Agent (daily)
+6. Reporting Agent (daily)
+
+**Development Layer** (2 agents):
+7. Developer Agent (continuous)
+8. Project Manager Agent (continuous)
+
+All agents report to Rich via email. Rich steers agents via email replies — no approval loops, no micromanagement.
+
+**Rich receives**: 
+- Daily operations email @ 5 PM (from Reporting Agent)
+- Weekly development proposals (from PM Agent)
+- Weekly/as-needed PR notifications (from Developer Agent)
 
 ---
 

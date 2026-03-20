@@ -76,23 +76,26 @@ Rich sees: One email with all metrics + can reply with steering
 
 ---
 
-## The Development Team
+## The Development Layer (2 Agents)
 
-### Developer (Autonomous Subagent)
-- Watches Jira tickets in AIC project
-- Writes code for approved features
-- Opens PRs with detailed descriptions
-- Tests in staging before opening PR
-- Merges only when Rich approves PR
+### Developer Agent (Autonomous Subagent)
+- Continuously watches Jira tickets in AIC project (assigned to Dev)
+- When PM creates ticket marked "Ready to Build", Dev starts immediately
+- Writes code, tests in staging, opens PR when ready
+- Tests on desktop/mobile, documents changes
+- Waits for Rich's PR approval before merging
+- Merges to main and notifies PM when feature is done
 
-### Project Manager (Autonomous Subagent + Creative Advisor)
-- Reviews daily Reporting Agent emails
-- Analyzes: What's working? What's not?
-- Proposes features based on data
-- Creates Jira tickets with full context
-- Emails proposals to Rich with impact estimates
-- Negotiates direction with Rich if he suggests alternatives
-- Updates product roadmap based on Rich's feedback
+### Project Manager Agent (Autonomous Subagent)
+- Continuously monitors Reporting Agent emails (arrives @ 5 PM daily)
+- Analyzes: What's working? What's not? What's trending?
+- Identifies improvement opportunities based on data
+- Creates Jira tickets with full acceptance criteria + ROI estimates
+- Sends proposal emails to Rich with impact analysis
+- Waits for Rich's approval (yes/no/maybe)
+- Notifies Dev Agent when feature is approved
+- Monitors Dev progress, adjusts backlog based on Rich's feedback
+- Proposes next feature when current one is done
 
 ---
 
@@ -241,23 +244,23 @@ This creates a permanent record of what happened each week, useful for:
 
 ---
 
-## What Gets Automated (Agents)
+## What Gets Automated (8 Agents)
 
-✅ **Content creation & publishing** (LinkedIn posts)
-✅ **Network outreach** (connection requests, DMs)
-✅ **Lead generation** (audit offers, calendar bookings)
-✅ **Sales qualification** (lead scoring, demo scheduling)
-✅ **Market research** (trends, case studies, positioning)
-✅ **Reporting** (daily metrics, weekly archive)
-✅ **Feature development** (code, PRs, testing)
-✅ **Project management** (proposal creation, roadmap)
-✅ **Deployments** (Heartbeat checks AVAILABLE-FEATURES.md)
+✅ **Content creation & publishing** (Content Agent — LinkedIn posts)
+✅ **Network outreach** (Networking Agent — connection requests, DMs)
+✅ **Lead generation** (Audit Agent — audit offers, calendar bookings)
+✅ **Sales qualification** (Sales Agent — lead scoring, demo scheduling)
+✅ **Market research** (Research Agent — trends, case studies, positioning)
+✅ **Reporting** (Reporting Agent — daily metrics, weekly archive, GitHub commits)
+✅ **Feature development** (Developer Agent — code, PRs, testing, merges)
+✅ **Project management** (PM Agent — proposal creation, roadmap, Jira tickets)
+✅ **Deployments** (Heartbeat — checks AVAILABLE-FEATURES.md, deploys)
 
-### What Rich Does (Steering Only)
+### What Rich Does (Steering + Approval Gates Only)
 
-✅ **Strategic direction** (via PM conversations)
-✅ **Quality gates** (PR approvals, deployment decisions)
-✅ **Course correction** (reply to daily email with steering)
+✅ **Strategic direction** (replies to PM proposals via email)
+✅ **Quality gates** (approves PRs, marks features "ready to deploy")
+✅ **Course correction** (replies to daily operations email with steering)
 ✅ **Final approval** (PR merge, feature launch)
 
 ---
